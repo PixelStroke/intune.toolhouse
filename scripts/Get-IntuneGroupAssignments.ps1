@@ -37,10 +37,10 @@
 	.NOTES
 	===========================================================================
 	 Created by:			Shon Thomas
-	 Filename:				Get-IntuneGroupAssignments.ps1
+	 Filename:			Get-IntuneGroupAssignments.ps1
 	 Required Modules:		AzureAD, Microsoft.Graph.Intune
-	 IMPORTANT:				YOU MUST RUN Connect-MSGraph -AdminConsent AND 
-	 						AUTHORIZE THE POWERSHELL MODULE IN YOUR TENANT
+	 IMPORTANT:			YOU MUST RUN Connect-MSGraph -AdminConsent AND 
+	 				AUTHORIZE THE POWERSHELL MODULE IN YOUR TENANT
 	===========================================================================
 
 	.SYNOPSIS
@@ -227,10 +227,10 @@ function Get-IntuneAssignments
 		#
 		# Return IntuneObject
 		#
-		$IntuneObj 					= New-Object -TypeName IntuneObject
-		$IntuneObj.Id 				= $Policy.id
+		$IntuneObj 			= New-Object -TypeName IntuneObject
+		$IntuneObj.Id 			= $Policy.id
 		$IntuneObj.PolicyName 		= $Policy.displayName
-		$IntuneObj.Type 			= $oDataType
+		$IntuneObj.Type 		= $oDataType
 		$IntuneObj.IncludedGroups 	= $Policy.assignments.target | Where-Object { $_.'@odata.type' -inotmatch 'exclusion' }
 		$IntuneObj.ExcludedGroups 	= $Policy.assignments.target | Where-Object { $_.'@odata.type' -imatch 'exclusion' }
 		return $IntuneObj
@@ -291,13 +291,13 @@ try  ## Collect configurations
 	#
 	if (-not $isStale) {
 		Write-Host -ForegroundColor Cyan "Collecting Intune configuration objects...`n"
-		$Global:DeviceConfigAssignments 		= Get-IntuneDeviceConfigurationPolicy -Select id, displayName -Expand assignments| ForEach-Object { Get-IntuneAssignments -Policy $_ -Quiet:$Quiet }
+		$Global:DeviceConfigAssignments 	= Get-IntuneDeviceConfigurationPolicy -Select id, displayName -Expand assignments| ForEach-Object { Get-IntuneAssignments -Policy $_ -Quiet:$Quiet }
 		$Global:DeviceComplianceAssignments 	= Get-IntuneDeviceCompliancePolicy -Select id, displayName -Expand assignments | ForEach-Object { Get-IntuneAssignments -Policy $_ -Quiet:$Quiet }
-		$Global:MobileAppAssignments 			= Get-IntuneMobileApp -Select id, displayName -Expand assignments | ForEach-Object { Get-IntuneAssignments -Policy $_ -Quiet:$Quiet }
+		$Global:MobileAppAssignments 		= Get-IntuneMobileApp -Select id, displayName -Expand assignments | ForEach-Object { Get-IntuneAssignments -Policy $_ -Quiet:$Quiet }
 		$Global:AppProtectionPoliciesAndroid 	= Get-IntuneAppProtectionPolicyAndroid -Select id, displayName -Expand assignments | ForEach-Object { Get-IntuneAssignments -Policy $_ -Quiet:$Quiet }
-		$Global:AppProtectionPoliciesiOS 		= Get-IntuneAppProtectionPolicyiOS -Select id, displayName -Expand assignments | ForEach-Object { Get-IntuneAssignments -Policy $_  -Quiet:$Quiet }
+		$Global:AppProtectionPoliciesiOS 	= Get-IntuneAppProtectionPolicyiOS -Select id, displayName -Expand assignments | ForEach-Object { Get-IntuneAssignments -Policy $_  -Quiet:$Quiet }
 		$Global:WindowsInformationProtection 	= Get-IntuneWindowsInformationProtectionPolicy -Select id, displayName -Expand assignments | ForEach-Object { Get-IntuneAssignments -Policy $_ -Quiet:$Quiet }
-		$Global:ConditionalAccessSettings 		= Get-IntuneAssignments -ConditionalAccess -Quiet:$Quiet
+		$Global:ConditionalAccessSettings 	= Get-IntuneAssignments -ConditionalAccess -Quiet:$Quiet
 	}
 } 
 catch [System.Exception]
